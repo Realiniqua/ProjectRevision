@@ -1,8 +1,8 @@
 return {
-      id = "Revision Rengar",
-      name = "Revision Rengar",
-      load = function()
-        return player.charName == "Rengar"
-      end,
-    }
+  id = "ProjectRevision",
+  name = "ProjectRevision",
+  load = function()
+    return ({["Rengar"] = true})[player.charName]
+  end,
+}
     

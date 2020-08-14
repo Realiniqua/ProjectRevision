@@ -1,0 +1,3 @@
+local FerocityManager = {}
+
+return FerocityManager

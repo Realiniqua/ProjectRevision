@@ -4,7 +4,7 @@ local pred = module.internal("pred")
 local dmg = module.internal("damage")
 
 local Q = {}
-Q.range = 125
+Q.range = 25
 Q.slot = SpellSlot.Q 
 Q.type = "self"
 Q.tar = nil 
@@ -27,7 +27,7 @@ function Q:bindToMenu(menu)
     if (self.makeMenu) then
         self:makeMenu()
     end
-    return self;
+    return self
 end
 
 
@@ -36,7 +36,7 @@ function Q:dmg(tar)
     local res = 0
     if player:spellSlot(self.slot).state ~= SpellState.Ready then return res end
     res = dmg.spell(player,tar,self.slot) + dmg.autoattack(player,tar,false)
-    return dmg.spell(player,tar,self.slot) + dmg.autoattack(player,tar,false)
+    return res
 end
 
 function Q:canKill(tar)
@@ -49,13 +49,13 @@ function Q:usable()
 end
 
 function Q:use()
-    player:castSpell(self.type,self.slot);
+    player:castSpell(self.type,self.slot)
 end
 
 function Q:shouldUse(tar)
     if not player:isInAutoAttackRange(tar,300) then return false end
     if self:canKill(tar) then return true end
-    if orb.core.can_spell_after_attack() then return true end
+   -- if orb.core.can_spell_after_attack() then return true end  -- Add to a new cunction (Use AA Cancel)
     return false
 end
 

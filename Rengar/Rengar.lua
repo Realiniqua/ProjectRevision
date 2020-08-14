@@ -14,7 +14,7 @@ menu:boolean("Q_Combat", "Use Q", true)
 Combo.Q:bindToMenu(menu)
 menu:boolean("W_Combat", "User W", true)
 menu:boolean("E_Combat", "Use E", true)
-menu:dropdown("EmpPrio", "Empower Prio : ", 2, {"Q", "W", "E"})
+menu:dropdown("EmpPrio", "Empower Prio : ", 3, {"Q", "W", "E","Automatic"})
 menu:keybind("One_Shot", "One Shot", "T", "H", true)
 local q_pred_input = {
     delay = 0,

@@ -10,6 +10,20 @@ E.type = 'pos'
 E.tar = nil 
 E.forceTarget = false
 
+
+E.pred = {}
+    E.range = 1000
+    E.delay = 0.25
+    E.speed = 1500
+    E.width = 140
+    E.collision = {
+    wall = true,
+    hero = true,
+    minion = true,
+}
+
+
+
 E.filter = function (res, tar, dist)
 if dist > E.range then return false end
 res.obj = tar
@@ -48,6 +62,10 @@ if player:spellSlot(self.slot).state ~= SpellState.Ready then return false end
 return true
 end
 
+function E:getPos(tar)
+    local seg = pred.linear.get_prediction(E.pred, tar)
+     if seg then return seg end 
+   end
 function E:use(pos)
     player:castSpell(self.type,self.slot,pos)
 end

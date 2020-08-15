@@ -62,7 +62,7 @@ end
 local QCancleAuto = function(last_target)
     if (last_target and last_target.isHero and player:isInAutoAttackRange(last_target, 25+player.attackRange)) then
         if (player:spellState(SpellSlot.Q) == SpellState.Ready) then
-            return player:castSpell("self", SpellSlot.Q) 
+            return Q:use()
         end
     end
 end

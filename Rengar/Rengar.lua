@@ -9,13 +9,16 @@ local damage = module.internal("damage")
 local menu = menu("Rengo", "Revision Rengar")
 
 local Combo = module.load("ProjectRevision" , "Rengar/ComboManager")
+local Ferocity = module.load("ProjectRevision" , "Rengar/FerocityManager")
 menu:header("Combo_header", "Combo")
 menu:boolean("Q_Combat", "Use Q", true)
-Combo.Q:bindToMenu(menu)
-menu:boolean("W_Combat", "User W", true)
+menu:boolean("W_Combat", "Use W", true)
 menu:boolean("E_Combat", "Use E", true)
-menu:dropdown("EmpPrio", "Empower Prio : ", 3, {"Q", "W", "E","Automatic"})
+Combo:bindToMenu(menu)
+menu:dropdown("EmpPrio", "Empower Prio : ", 3, {"Automatic","Q", "W", "E"})
 menu:keybind("One_Shot", "One Shot", "T", "H", true)
+--Ferocity.menu = menu 
+
 local q_pred_input = {
     delay = 0,
     range = 125,
@@ -137,12 +140,12 @@ local function combo()
 end
 
 local function slowTick()
-
+    Combo:updateTarget()
 end
 
 local function onTick()
     if orb.menu.combat.key:get() then 
-        Combo:getNextSpell()
+        Combo:nextSpell()
     end
 end
 

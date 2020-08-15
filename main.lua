@@ -21,7 +21,7 @@ _PROJECT_REVISION_VERSION = "0.1"
     suggestions: 
     Maybe burst on selected target instead of hotkey?
 
-  
+  test champSpecificHealth if its rengar health
 ]]
 chat.print("Project Revision injected Ver[".._PROJECT_REVISION_VERSION.."]")
 module.load("ProjectRevision", player.charName .."/".. player.charName)

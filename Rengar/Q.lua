@@ -17,8 +17,8 @@ end
 
 function Q:makeMenu()
     self.menu:header("hjfs","Combo")
-    self.menu:boolean("ks", "Use to KS")
-    self.menu:boolean("aaCancel", "Use AA Cancel")
+    self.menu:boolean("ks", "Use to KS",true)
+    self.menu:boolean("aaCancel", "Use AA Cancel",true)
 end
 
 function Q:bindToMenu(menu)
@@ -31,6 +31,15 @@ function Q:bindToMenu(menu)
 end
 
 
+
+function Q:empDmg(tar)
+    --equations; scaling = 0.47 + (0.03*level) , basedmg : if level<10 : 15 + (15*lvl) else (15*10)+(10*lvl)
+    if not tar then return 0 end
+    
+    local res = 0 
+    local res = res + dmg.autoattack(player,tar,false) + dmg.spell(player,tar,self.slot,1)
+    return res
+end
 
 function Q:dmg(tar)
     local res = 0
@@ -49,7 +58,8 @@ function Q:usable()
 end
 
 function Q:use()
-    player:castSpell(self.type,self.slot)
+   if player:castSpell(self.type,self.slot) then return true end 
+   return false
 end
 
 function Q:shouldUse(tar)
@@ -59,14 +69,7 @@ function Q:shouldUse(tar)
     return false
 end
 
-local QCancleAuto = function(last_target)
-    if (last_target and last_target.isHero and player:isInAutoAttackRange(last_target, 25+player.attackRange)) then
-        if (player:spellState(SpellSlot.Q) == SpellState.Ready) then
-            return Q:use()
-        end
-    end
-end
-cb.add(cb.after_attack, QCancleAuto)
+
 
 local countTick = 0
 function Q:onTick()

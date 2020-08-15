@@ -47,8 +47,8 @@ end
 
 function E:dmg(tar)
 local res = 0
-if player:spellSlot(self.slot) ~= SPellState.Ready then return false end
-res = dmg.spell(player,tar,self.slot) 
+if player:spellSlot(self.slot).state ~= SpellState.Ready then return res end
+res = res + dmg.spell(player,tar,self.slot)
 return res
 end
 

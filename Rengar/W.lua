@@ -18,7 +18,8 @@ end
 function W:makeMenu()
     self.menu:header("W_combo","Combo")
     self.menu:boolean("ks", "Use to KS", false)
-    self.menu:boolean("healing", "use W to Heal", true)
+    self.menu:slider("Health", "Use  under X% HP",40,0,100,1)
+    self.menu:slider("Gain", "Use if HP gain is over X% HP",10,0,100,1)
 end
 
 
@@ -35,8 +36,8 @@ end
 
 function W:dmg(tar)
     local res = 0
-if player:SpellSlot(self.slot).state ~= SpellState.Ready then return res end
-res = dmg.spell(player,tar,self.slot)
+if player:spellSlot(self.slot).state ~= SpellState.Ready then return res end
+res = res + dmg.spell(player,tar,self.slot)
 return res
 end
 

@@ -59,6 +59,14 @@ function Q:shouldUse(tar)
     return false
 end
 
+local QCancleAuto = function(last_target)
+    if (last_target and last_target.isHero and player:isInAutoAttackRange(last_target, 25+player.attackRange)) then
+        if (player:spellState(SpellSlot.Q) == SpellState.Ready) then
+            return player:castSpell("self", SpellSlot.Q) 
+        end
+    end
+end
+cb.add(cb.after_attack, QCancleAuto)
 
 local countTick = 0
 function Q:onTick()

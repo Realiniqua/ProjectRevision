@@ -52,4 +52,26 @@ function E:use(pos)
     player:castSpell(self.type,self.slot,pos)
 end
 
-function E
+function E:shouldUse(tar)
+if player.pos:dist(tar.pos) >= 726 and ~menu.gapclose:get() then return false end
+if self:canKill(tar)  and menu.Ks:get() then return true end
+if player.pos:dist(tar.pos) <= E.range  then return true end
+end
+
+local countTick = 0
+function E:onTick()
+    local tar = self:updateTarget()
+if not tar then return false end 
+if self:shouldUse(tar) and self:use() then return true end 
+if countTick % 15 == 0 then  -- reset target every half second
+    self.tar = nil 
+end
+end
+
+function E:updateTarget()
+    local res = ts.get_result(self.filter)
+    if res.obj then self.tar = res.obj end
+    return res.obj
+end
+
+return E

@@ -4,7 +4,7 @@ local pred = module.internal("pred")
 local dmg = module.internal("damage")
 
 local W = {}
-W.range = 450
+W.range = 450 + player.boundingRadius
 W.slot = SpellSlot.W
 W.type = "self"
 W.tar = nil
@@ -46,8 +46,13 @@ if W:dmg(tar) > tar.health then return true end
 return false
 end
 
+function W:getPercentageHeal()
+    return (100 - ((dmg.predict(player,1.5)/player.maxHealth) * 100))
+end
+
 function W:usable()
-if player.spellSlot(self.slot).state ~= SpellState.Ready then return false end
+    if player:spellSlot(self.slot).state ~= SpellState.Ready then return false end
+    return true
 end
 
 function W:use()
@@ -55,9 +60,10 @@ function W:use()
 end
 
 function W:shouldUse(tar)
-if player.pos:dist(tar.pos) > W.range then return false end
-if player.pos:dist(tar.pos) <= W.range then return true-- and 3/4 stacks
-end
+    local dist = player.pos:dist(tar.pos)
+    if dist > self.range then return false end
+    if self.menu.ks:get() and self:canKill(tar) then return true end 
+    return false
 end
 
 local countTick = 0

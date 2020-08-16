@@ -60,11 +60,6 @@ function utility:allAvailableDmg(tar)
     return alldmg
 end
 
---[[utility.lastDmg = player.health                                     testing first if dmg.predict does the job already
-function utility:getDmg()
-    
-end]]
-
 
 function utility:findItem(name)
     local inv = self:getInv()

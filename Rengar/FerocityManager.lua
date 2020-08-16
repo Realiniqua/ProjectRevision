@@ -8,6 +8,8 @@ function FerocityManager:setTarget(tar)
     self.tar = tar
 end
 
+
+
 function FerocityManager:getStacks()
     return player.mana 
 end

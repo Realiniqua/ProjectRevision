@@ -1,6 +1,7 @@
 --RengarQEmp ( Rengar's Empowered Q )
 -- TEST
-
+--leap range : 800 
+--isLeapActive is inside R.lua
 
 local orb = module.internal("orb")
 local ts = module.internal("TS")

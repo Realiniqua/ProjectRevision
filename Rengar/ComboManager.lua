@@ -17,6 +17,7 @@ function ComboManager:makeMenu()
     self.menu:header("gfgfd", "Spells")
     self.Q:bindToMenu(self.menu)
     self.W:bindToMenu(self.menu)
+    self.E:bindToMenu(self.menu)
     self.menu:header("hjfs", "Target Selector")
     self.menu:boolean("swapTarget", "prio empowered E and Swap Target", false)
     self.menu:menu("ts", "More Targetselector settings")
@@ -38,7 +39,7 @@ function ComboManager:getBurstDmg(tar)
     res = res + self.Q:dmg(tar) + self.Q:empDmg(tar) + self.E:dmg(tar) + self.W:dmg(tar)
     return res
 end
-
+     
 function ComboManager:canKillWithBurst(tar)
     if not tar then
         return false
@@ -52,7 +53,7 @@ ComboManager.filter = function(res, tar, dist)
         ComboManager.selected = tar
         return true
     end
-    if dist > 500 --[[idk what to put here for now its just a placeholder]] then
+    if dist > 1000 --[[idk what to put here for now its just a placeholder]] then
         return false
     end
 
@@ -80,8 +81,9 @@ ComboManager.bursting = false
 ComboManager.afterBurst = false
 function ComboManager:burstLogic(tar)
     if tar then
-        if not self.afterBurst and self.R:activated() then
+        if not self.afterBurst and self.R:isActive() then
             if not self.bursting then
+                
                 orb.core.set_pause_attack(1)
             end
             if player:isInAutoAttackRange(tar) and self.Q:use() then
@@ -101,13 +103,38 @@ function ComboManager:burstLogic(tar)
     end
 end
 
+
+function ComboManager:getUsableSpells(tar)
+    local res = {}
+    if not tar then return end 
+    for _,v in pairs({self.Q,self.W,self.E}) do 
+        if v:shouldUse(tar) then 
+            res[#res+1] = v 
+        end 
+    end 
+    return res 
+end
+
 function ComboManager:nextSpell()
+   local stacks = self.Ferocity:getStacks()
     if not self.tar then
         return
     end
     if self:shouldBurst() then
-        self:burstLogic(self.tar)
-    end
+        
+        self:burstLogic(self.selected)
+        
+    elseif self.tar and not orb.core.is_paused() and stacks < 3 then 
+        for _,v in pairs({self.Q,self.W,self.E}) do 
+            if v:usable() and v:shouldUse(self.tar) then
+                v:use(self.tar)
+                orb.core.set_server_pause()
+                if stacks == 3 then 
+                    orb.core.set_pause(0.5)
+                end
+            end 
+        end 
+    end  
 end
 
 local QCancelAuto = function(last_target)

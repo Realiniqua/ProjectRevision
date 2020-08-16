@@ -11,7 +11,7 @@ Q.tar = nil
 Q.forceTarget = false
 
 Q.filter = function (res, tar, dist)
-    if dist > Q.range + player.attackRange then return false end
+    if dist > Q.range + player.attackRange + player.boundingRadius then return false end
     res.obj = tar
 end
 
@@ -65,9 +65,9 @@ function Q:use()
 end
 
 function Q:shouldUse(tar)
-    if not player:isInAutoAttackRange(tar,300) then return false end
+    local dist = player.pos:dist(tar)
+    if dist > self.range + player.attackRange + player.boundingRadius then return false end 
     if self:canKill(tar) then return true end
-   -- if orb.core.can_spell_after_attack() then return true end  -- Add to a new cunction (Use AA Cancel)
     return false
 end
 

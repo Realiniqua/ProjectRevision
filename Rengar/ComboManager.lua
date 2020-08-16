@@ -1,13 +1,15 @@
 local orb = module.internal("orb")
 local ts = module.internal("TS")
-local Ferocity = module.load("ProjectRevision" , "Rengar/FerocityManager")
+
+
 local ComboManager = {}
-ComboManager.tar = nil
-ComboManager.selected = false
 ComboManager.Q = module.load("ProjectRevision", "Rengar/Q")
 ComboManager.W = module.load("ProjectRevision", "Rengar/W")
 ComboManager.E = module.load("ProjectRevision", "Rengar/E")
 ComboManager.R = module.load("ProjectRevision", "Rengar/R")
+ComboManager.tar = nil
+ComboManager.selected = false
+ComboManager.Ferocity = {}
 
 function ComboManager:makeMenu()
     self.menu:header("gfsitg", "General")
@@ -91,7 +93,7 @@ function ComboManager:burstLogic(tar)
                 end
             end
         elseif self.afterBurst then
-            local empSpell = Ferocity:getEmpSpell()
+            local empSpell = self.Ferocity:getEmpSpell()
             if empSpell then 
                 empSpell:use(tar)
             end

@@ -15,6 +15,8 @@ Q.filter = function (res, tar, dist)
     res.obj = tar
 end
 
+
+
 function Q:makeMenu()
     self.menu:header("hjfs","Combo")
     self.menu:boolean("ks", "Use to KS",true)

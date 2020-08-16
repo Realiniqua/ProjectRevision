@@ -10,6 +10,12 @@ local menu = menu("Rengo", "Revision Rengar")
 
 local Combo = module.load("ProjectRevision" , "Rengar/ComboManager")
 local Ferocity = module.load("ProjectRevision" , "Rengar/FerocityManager")
+local util = module.load("ProjectRevision" , "iLLUtility")
+
+Combo.Ferocity = Ferocity 
+Ferocity.Combo = Combo 
+Ferocity.util = util
+
 menu:header("Combo_header", "Combo")
 menu:boolean("Q_Combat", "Use Q", true)
 menu:boolean("W_Combat", "Use W", true)
@@ -147,6 +153,7 @@ local function onTick()
     if orb.menu.combat.key:get() then 
         Combo:nextSpell()
     end
+    
 end
 
 cb.add(cb.tick, onTick)

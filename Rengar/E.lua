@@ -53,8 +53,8 @@ function E:dmg(tar)
 end
 
 function E:canKill(tar)
-    if E:dmg(tar) > tar.health then return true end
-return false
+    if E:dmg(tar) > tar.health then return true 
+    else return false end 
 end
 
 function E:usable()
@@ -64,10 +64,13 @@ end
 
 function E:getPos(tar)
     local seg = pred.linear.get_prediction(E.pred, tar)
-     if seg then return seg end 
+     if seg.endPos then return seg.endPos end 
    end
 function E:use(pos)
-    player:castSpell(self.type,self.slot,pos)
+    if pos then 
+        if player:castSpell(self.type,self.slot,pos) then return true end 
+    end 
+    return false
 end
 
 function E:shouldUse(tar)
@@ -75,6 +78,7 @@ function E:shouldUse(tar)
     if dist > self.range then return false end
     if self.menu.ks:get() and self:canKill(tar) then return true end
     if self.menu.gapclose:get() and dist <= self.range and dist > player.attackRange + player.boundingRadius and player.pos:dist(tar.pathEndPos) > dist then return true end
+    return false 
 end
 
 local countTick = 0

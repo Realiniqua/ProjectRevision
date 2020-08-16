@@ -81,25 +81,35 @@ ComboManager.bursting = false
 ComboManager.afterBurst = false
 function ComboManager:burstLogic(tar)
     if tar then
-        if not self.afterBurst and self.R:isActive() then
-            if not self.bursting then
-                
-                orb.core.set_pause_attack(1)
-            end
-            if player:isInAutoAttackRange(tar) and self.Q:use() then
-                self.bursting = true
-                if player:attack(tar) then
-                    if self.W:use() and self.E:use() then
-                        self.afterBurst = true
-                    end
-                end
-            end
-        elseif self.afterBurst then
-            local empSpell = self.Ferocity:getEmpSpell()
-            if empSpell then 
-                empSpell:use(tar)
+        if self.afterBurst then 
+            if self.Q:use() and player:attack(tar) then 
+                print("BURST DAT BITCH")
+                self.afterBurst = false
+                self.bursting = false
+                self.selected = nil
             end
         end
+        if not self.bursting and self.R:isActive() or self.R:isLeapActive() then 
+            orb.core.set_pause_attack(0.1)
+        end
+        if self.R:isActive() or self.R:isLeapActive() then
+          
+            if not self.Q:isActive() then
+                if player:isInAutoAttackRange(tar) then 
+                    self.Q:use()
+                end
+                return 
+            end
+            self.bursting = true
+            
+            if player:attack(tar) then
+                if self.E:use(tar.pos) and self.W:use() then -- add tiamat
+                    self.afterBurst = true
+                    return
+                end
+            end
+        end
+        
     end
 end
 
@@ -126,8 +136,13 @@ function ComboManager:nextSpell()
         
     elseif self.tar and not orb.core.is_paused() and stacks < 3 then 
         for _,v in pairs({self.Q,self.W,self.E}) do 
+            --print( v.slot,"||||", v:shouldUse(self.tar))
             if v:usable() and v:shouldUse(self.tar) then
-                v:use(self.tar)
+                if v.type == "pos" then 
+                    local pos = v:getPos(self.tar)
+                    v:use(pos)
+                end
+                v:use()
                 orb.core.set_server_pause()
                 if stacks == 3 then 
                     orb.core.set_pause(0.5)
@@ -137,8 +152,8 @@ function ComboManager:nextSpell()
     end  
 end
 
-local QCancelAuto = function(last_target)
-    if ComboManager.menu.Q.aaCancel:get() and orb.menu.combat.key:get() and last_target and last_target.isHero then
+local QCancelAuto = function(lastTarget)
+    if ComboManager.menu.Q.aaCancel:get() and orb.menu.combat.key:get() and lastTarget and lastTarget.isHero then
         if (player:spellState(SpellSlot.Q) == SpellState.Ready) then
             return ComboManager.Q:use()
         end

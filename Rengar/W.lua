@@ -56,7 +56,7 @@ function W:usable()
 end
 
 function W:use()
-    player:castSpell(self.type,self.slot)
+    if player:castSpell(self.type,self.slot) then return true end
 end
 
 function W:shouldUse(tar)

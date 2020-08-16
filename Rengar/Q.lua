@@ -71,7 +71,9 @@ function Q:shouldUse(tar)
     return false
 end
 
-
+function Q:isActive()
+    return player.buff["RengarQ"]
+end
 
 local countTick = 0
 function Q:onTick()

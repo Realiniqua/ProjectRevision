@@ -157,6 +157,6 @@ local function onTick()
     
 end
 
-cb.add(cb.tick, onTick)
+cb.add(cb.pre_tick, onTick)
 cb.add(cb.slow_tick, slowTick)
 chat.print("Revision Rengar has been Loaded!")

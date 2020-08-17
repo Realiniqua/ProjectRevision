@@ -22,9 +22,9 @@ menu:boolean("Q_Combat", "Use Q", true)
 menu:boolean("W_Combat", "Use W", true)
 menu:boolean("E_Combat", "Use E", true)
 Combo:bindToMenu(menu)
-menu:dropdown("EmpPrio", "Empower Prio : ", 3, {"Automatic","Q", "W", "E"})
+menu:dropdown("EmpPrio", "Empower Prio : ", 1, {"Automatic","Q", "W", "E"})
 menu:keybind("One_Shot", "One Shot", "T", "H", true)
---Ferocity.menu = menu 
+Ferocity.menu = menu 
 
 local q_pred_input = {
     delay = 0,
@@ -148,13 +148,18 @@ end
 
 local function slowTick()
     Combo:updateTarget()
+    if not orb.menu.combat.key:get() then 
+        Combo.canLeap = Combo.R:isActive() or Combo.R:isLeapActive()
+        
+        --Combo.selected = nil
+    end
 end
 
 local function onTick()
     if orb.menu.combat.key:get() then 
+        
         Combo:nextSpell()
     end
-    
 end
 
 cb.add(cb.pre_tick, onTick)

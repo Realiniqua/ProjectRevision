@@ -2,7 +2,7 @@ local orb = module.internal("orb")
 local ts = module.internal("TS")
 local pred = module.internal("pred")
 local dmg = module.internal("damage")
-
+local Ferocity = module.load("ProjectRevision", "Rengar/FerocityManager")
 local Q = {}
 Q.range = 25
 Q.slot = SpellSlot.Q 
@@ -50,8 +50,14 @@ function Q:dmg(tar)
     return res
 end
 
+function Q:empCanKill(tar)
+    if self:empDmg(tar) > tar.health then return true end
+    return false
+end
+
 function Q:canKill(tar)
-    if Q:dmg(tar) > tar.health then return true end 
+    if self:dmg(tar) > tar.health then return true end 
+    
     return false 
 end
 function Q:usable()
@@ -65,6 +71,7 @@ function Q:use()
 end
 
 function Q:shouldUse(tar)
+    if Ferocity:getStacks() >= 4 then return false end 
     local dist = player.pos:dist(tar)
     if dist > self.range + player.attackRange + player.boundingRadius then return false end 
     if self:canKill(tar) then return true end
@@ -72,7 +79,7 @@ function Q:shouldUse(tar)
 end
 
 function Q:isActive()
-    return player.buff["RengarQ"]
+    return player.buff["RengarQ"] or player.buff["RengarQEmp"]
 end
 
 local countTick = 0

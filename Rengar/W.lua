@@ -2,6 +2,8 @@ local orb = module.internal("orb")
 local ts = module.internal("TS")
 local pred = module.internal("pred")
 local dmg = module.internal("damage")
+local Ferocity = module.load("ProjectRevision", "Rengar/FerocityManager")
+
 
 local W = {}
 W.range = 450 + player.boundingRadius
@@ -17,9 +19,10 @@ end
 
 function W:makeMenu()
     self.menu:header("W_combo","Combo")
+    self.menu:boolean("forceStack", "Force W on 3 stacks to get empowered",true)
     self.menu:boolean("ks", "Use to KS", false)
-    self.menu:slider("Health", "Use  under X% HP",40,0,100,1)
-    self.menu:slider("Gain", "Use if HP gain is over X% HP",10,0,100,1)
+    self.menu:slider("health", "Use  under X% HP",40,0,100,1)
+    self.menu:slider("gain", "Use if HP gain is over X% HP",10,0,100,1)
 end
 
 
@@ -60,9 +63,15 @@ function W:use()
 end
 
 function W:shouldUse(tar)
+    if Ferocity:getStacks() >= 4 then return false end 
+    --[[
+    if (player.health / player.maxHealth) < self.menu.health:get()
+    and self:getPercentageHeal() > self.menu.gain:get() then return true end]]
     local dist = player.pos:dist(tar.pos)
+
     if dist > self.range then return false end
     if self.menu.ks:get() and self:canKill(tar) then return true end 
+    if self.menu.forceStack:get() and Ferocity:getStacks() == 3 then return true end
     return false
 end
 

@@ -12,6 +12,11 @@ local menu = menu("Rengo", "Revision Rengar")
 local Combo = module.load("ProjectRevision" , "Rengar/ComboManager")
 local Ferocity = module.load("ProjectRevision" , "Rengar/FerocityManager")
 local util = module.load("ProjectRevision" , "iLLUtility")
+local Rengar = {}
+Rengar.Q = module.load("ProjectRevision", "Rengar/Q")
+Rengar.W = module.load("ProjectRevision", "Rengar/W")
+Rengar.E = module.load("ProjectRevision", "Rengar/E")
+Rengar.R = module.load("ProjectRevision", "Rengar/R")
 
 Combo.Ferocity = Ferocity 
 Ferocity.Combo = Combo 
@@ -22,9 +27,14 @@ menu:boolean("Q_Combat", "Use Q", true)
 menu:boolean("W_Combat", "Use W", true)
 menu:boolean("E_Combat", "Use E", true)
 Combo:bindToMenu(menu)
-menu:dropdown("EmpPrio", "Empower Prio : ", 1, {"Automatic","Q", "W", "E"})
+menu:dropdown("EmpPrio", "Empower Prio : ", 3, {"Automatic","Q", "W", "E"})
 menu:keybind("One_Shot", "One Shot", "T", "H", true)
-Ferocity.menu = menu 
+menu:header("Drawings", "Drawings")
+menu:boolean("Q_Draw","Draw Q",true)
+menu:boolean("W_Draw","Draw W",true)
+menu:boolean("E_Draw","Draw E", true)
+
+--Ferocity.menu = menu 
 
 local q_pred_input = {
     delay = 0,
@@ -104,7 +114,6 @@ local function e_combo_target_filter(res, obj, dist)
     return true
 end
 
-
 local function q_combo_logic()
     if player:spellState(SpellSlot.Q) ~= SpellState.Ready then
         return
@@ -143,25 +152,43 @@ local function e_combo_logic()
     end
 end
 
+local function Q_Drawing()
+graphics.draw_circle(player.pos, Rengar.Q.range, 5, graphics.argb(127, 127, 0, 255), 0)
+end    
+local function W_Drawing()
+graphics.draw_circle(player.pos, Rengar.W.range, 5, graphics.argb(127, 0, 102, 204), 0)
+end
+
+local function E_Drawing()
+graphics.draw_circle(player.pos, Rengar.E.range, 5, graphics.argb(127, 0, 0, 205), 0)
+end   
+local function OnDraw()
+if menu.Q_Draw:get() then
+    Q_Drawing()
+end
+if menu.W_Draw:get() then
+    W_Drawing()
+end
+if menu.E_Draw:get() then
+    E_Drawing()
+end
+end
+
 local function combo()
 end
 
 local function slowTick()
     Combo:updateTarget()
-    if not orb.menu.combat.key:get() then 
-        Combo.canLeap = Combo.R:isActive() or Combo.R:isLeapActive()
-        
-        --Combo.selected = nil
-    end
 end
 
 local function onTick()
     if orb.menu.combat.key:get() then 
-        
         Combo:nextSpell()
     end
+    
 end
 
+cb.add(cb.draw, OnDraw)
 cb.add(cb.pre_tick, onTick)
 cb.add(cb.slow_tick, slowTick)
 chat.print("Revision Rengar has been Loaded!")

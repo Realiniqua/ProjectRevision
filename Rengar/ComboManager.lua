@@ -77,6 +77,7 @@ function ComboManager:shouldBurst()
     end
 end
 
+
 ComboManager.bursting = false
 ComboManager.afterBurst = false
 ComboManager.canLeap = false

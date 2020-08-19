@@ -6,7 +6,7 @@ local Ferocity = module.load("ProjectRevision", "Rengar/FerocityManager")
 
 
 local W = {}
-W.range = 450 + player.boundingRadius
+W.range = 450 
 W.slot = SpellSlot.W
 W.type = "self"
 W.tar = nil
